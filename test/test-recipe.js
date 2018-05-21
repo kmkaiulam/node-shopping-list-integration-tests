@@ -9,33 +9,19 @@ chai.use(chaiHttp);
 
 describe('Recipes', function() {
 
-    // Before our tests run, we activate the server. Our `runServer`
-    // function returns a promise, and we return the that promise by
-    // doing `return runServer`. If we didn't return a promise here,
-    // there's a possibility of a race condition where our tests start
-    // running before our server has started.
+    
     before(function() {
       return runServer();
     });
   
-    // although we only have one test module at the moment, we'll
-    // close our server at the end of these tests. Otherwise,
-    // if we add another test module that also has a `before` block
-    // that starts our server, it will cause an error because the
-    // server would still be running from the previous tests.
+
     after(function() {
       return closeServer();
     });
 
-    // test strategy:
-  //   1. make request to `/recipes`
-  //   2. inspect response object and prove has right code and have
-  //   right keys in response object.
+ 
   it('should list items on GET', function() {
-    // for Mocha tests, when we're dealing with asynchronous operations,
-    // we must either return a Promise object or else call a `done` callback
-    // at the end of the test. The `chai.request(server).get...` call is asynchronous
-    // and returns a Promise, so we just return it.
+   
     return chai.request(app)
       .get('/recipes')
       .then(function(res) {
@@ -44,8 +30,7 @@ describe('Recipes', function() {
         expect(res.body).to.be.a('array');
 
         expect(res.body.length).to.be.at.least(1);
-        // each recipe should be an object with key/value pairs
-        // for `id`, `name` and `ingredients`.
+     
         const expectedKeys = ['id', 'name', 'ingredients'];
         res.body.forEach(function(recipe) {
             expect(recipe).to.be.a('object');
@@ -64,13 +49,10 @@ describe('Recipes', function() {
 
 
    it('should add an item on POST', function(){ 
-    // test strategy:
-    //  1. make a POST request with data for a new item
-    //  2. inspect response object and prove it has right
-    //  status code and that the returned object has an `id`
     const newRecipe  = {name: 'Smores', ingredients: ['marshmallow', 'chocolate', 'graham cracker']};
     return chai.request(app)
         .post('/recipes')
+        .send(newRecipe)
         .then(function(res) {
             expect(res).to.have.status(201)
             expect(res).to.be.json;
@@ -87,10 +69,41 @@ describe('Recipes', function() {
         });
     });
 
-    it('should update an item on PUT', function(){
-        
+
+
+    it('should update a recipe on PUT', function(){
+        updateRecipe = {name: 'caramel apple', ingredients: ['apple', 'caramel', 'peanut', 'skewer']}; 
+        return chai.request(app)
+            .get('/recipes')
+            .then(function(res) {
+            updateRecipe.id = res.body[0].id;
+
+            return chai.request(app)
+                .put(`/recipes/${updateRecipe.id}`)
+                .send(updateRecipe)
+            })
+            .then(function(res) {
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.be.deep.equal(updateRecipe);
+                });
+            });
+        });
+
+
+    it('should delete a recipe on DELETE', function(){
+    return chai.request(app)
+        .get('/recipes')
+        .then(function(res){
+            return chai.request(app)
+            .delete(`/recipes/${res.body[0].id}`);
+            })
+        .then(function(res){
+            expect(res).to.have.status(204);
+        });
+     });
     
-    }
 
 
 
@@ -100,5 +113,3 @@ describe('Recipes', function() {
 
 
 
-
-});
