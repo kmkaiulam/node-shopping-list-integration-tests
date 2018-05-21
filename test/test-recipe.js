@@ -19,33 +19,30 @@ describe('Recipes', function() {
       return closeServer();
     });
 
- 
-  it('should list items on GET', function() {
-   
-    return chai.request(app)
-      .get('/recipes')
-      .then(function(res) {
-        expect(res).to.have.status(200);
-        expect(res).to.be.json;
-        expect(res.body).to.be.a('array');
-
-        expect(res.body.length).to.be.at.least(1);
-     
-        const expectedKeys = ['id', 'name', 'ingredients'];
-        res.body.forEach(function(recipe) {
-            expect(recipe).to.be.a('object');
-            expect(recipe).to.include(expectedKeys);
-        //edge cases
-            //values missing
-            expect(recipe.id).to.not.equal(null || undefined);
-            expect(recipe.name).to.not.equal(null || undefined);
-            expect(recipe.ingredients).to.not.equal(null || undefined);
-            //correct data types
-            expect(recipe.name).to.be.a('string');
-            expect(recipe.ingredients).to.be.a('array');
-        });
+    it('should list items on GET', function() {
+        return chai.request(app)
+          .get('/recipes')
+          .then(function(res) {
+            expect(res).to.have.status(200);
+            expect(res).to.be.json;
+            expect(res.body).to.be.a('array');
+            expect(res.body.length).to.be.at.least(1);
+            const expectedKeys = ['id', 'name', 'ingredients'];
+            res.body.forEach(function(recipe) {
+                expect(recipe).to.be.a('object');
+                expect(recipe).to.include.keys(expectedKeys);
+                //values missing?
+                expect(recipe.id).to.not.equal(null || undefined);
+                expect(recipe.name).to.not.equal(null || undefined);
+                expect(recipe.ingredients).to.not.equal(null || undefined);
+                //correct data types
+                expect(recipe.name).to.be.a('string');
+                expect(recipe.ingredients).to.be.a('array');
+            });
      });
-   });
+    });
+
+  
 
 
    it('should add an item on POST', function(){ 
@@ -58,17 +55,9 @@ describe('Recipes', function() {
             expect(res).to.be.json;
             expect(res.body).to.be.a('object');
             expect(res.body).to.include.keys('id', 'name', 'ingredients');
-            expect(res.body).to.deep.equal(Object.assign(newItem, {id: res.body.id}));
-            res.body.forEach(function(recipe) {
-                expect(recipe.id).to.not.equal(null || undefined);
-                expect(recipe.name).to.not.equal(null || undefined);
-                expect(recipe.ingredients).to.not.equal(null || undefined);
-                expect(recipe.name).to.be.a('string');
-                expect(recipe.ingredients).to.be.a('array');
-            });
+            expect(res.body).to.deep.equal(Object.assign(newRecipe, {id: res.body.id}));
+            }); 
         });
-    });
-
 
 
     it('should update a recipe on PUT', function(){
@@ -89,7 +78,6 @@ describe('Recipes', function() {
                 expect(res.body).to.be.deep.equal(updateRecipe);
                 });
             });
-        });
 
 
     it('should delete a recipe on DELETE', function(){
@@ -103,12 +91,7 @@ describe('Recipes', function() {
             expect(res).to.have.status(204);
         });
      });
-    
-
-
-
-
-
+    });    
 
 
 
