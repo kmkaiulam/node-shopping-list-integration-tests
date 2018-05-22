@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: j2dE/dQ0lVtPQhR+8GnyC6Pb760UOHylU6wYUwxrX3liENBUn6LufPkEeCeJe7AGjEMAdeZ3TJ6/iXEGgDidUPvr+q8tkB4XCh+VsUxHtjGGBnATPQgjwQLzASh/ZsP02RZoIuodZOWnsiBkfIOIVYLhXJWBdY00Szq9qOLgpuC70t+mj39JQLlY+bue0tPGDw/dRnJztuJ5+MZMc1GQE0seWEvF979ZFAcEQInHm5aLggQdOjobhWV0Ut8LpGq2HBmE5R/86ZzFXJkwbNfP/2zodiJoK3eDks7no+szNlsuvmcT7b1zBo2o/wUQ58hrZKuGEeekBF3eUUTO99aSf4sPKNE9MwNfLgE6Zk2uTCH2EmVo9TdCdRm+zztLRabuyaEknkiUGhRds4zNJ08iDqI2BOWqJWW5MInJKu0VP2AWbgcNP2RlvTsrimX4PaEb3pPaznhjVs1tXHGIzzd8bf3B3ASGDY9WADZjsV9TWcK1ziQFooRsJs0HJRSyogfgO4OfuMF3+Y/FCIHzmSjmNpdANuqHGJ6ds+VUocNhK4Et4AwOYQ6Mm+8qn1W1BqOCPxt1rbPEGNlOms7aOydbceZWVb6MPdT80D0Fh6vLuud0s4SP7tptl9UtGkpizVKWXfxXvM2M13B+K4TEDowC9w4ey3sQl75Xckfne8RtDbw=
+  app: obscure-atoll-47193
+  on:
+    repo: kmlamthinkful/node-shopping-list-integration-tests
